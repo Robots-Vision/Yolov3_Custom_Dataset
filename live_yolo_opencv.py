@@ -10,11 +10,12 @@ CONFIDENCE = 0.3
 SCORE_THRESHOLD = 0.5
 IOU_THRESHOLD = 0.5
 # Put here the same .cfg file that the training
-config_path = "cfg/yolov3_testing.cfg"
-weights_path = "weights/yolov3_training_last.weights"
+config_path = "cfg/yolov3_garb_test.cfg"
+weights_path = "weights/yolov3_garb_40000.weights"
 font_scale = 1
 thickness = 1
-LABELS = open("obj.names").read().strip().split("\n")
+LABELS = open(".names/garb.names").read().strip().split("\n")
+print(LABELS)
 COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
 
 net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
@@ -22,18 +23,19 @@ net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 ln = net.getLayerNames()
 ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
+# cap = cv2.VideoCapture("traffic-sign-to-test.mp4")
 cap = cv2.VideoCapture(0)
 
 while True:
     _, image = cap.read()
 
-    _, h, w = image.shape[:2]
+    h, w = image.shape[:2]
     blob = cv2.dnn.blobFromImage(image, 1/255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     start = time.perf_counter()
     layer_outputs = net.forward(ln)
-    time_took = time.perf_counter() - start
-    print("Time took:", time_took)
+    # time_took = time.perf_counter() - start
+    # # print("Time took:", time_took)
     boxes, confidences, class_ids = [], [], []
 
     # loop over each of the layer outputs
@@ -43,7 +45,9 @@ while True:
             # extract the class id (label) and confidence (as a probability) of
             # the current object detection
             scores = detection[5:]
+            # print("Scores: ${0}".format(scores))
             class_id = np.argmax(scores)
+            # print("Class_id: {}".format(class_id))
             confidence = scores[class_id]
             # discard weak predictions by ensuring the detected
             # probability is greater than the minimum probability
