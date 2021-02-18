@@ -11,10 +11,10 @@ SCORE_THRESHOLD = 0.5
 IOU_THRESHOLD = 0.5
 # Put here the same .cfg file that the training
 config_path = "cfg/yolov3_paper_test.cfg"
-weights_path = "weights/yolov3_training_paper.weights"
+weights_path = "weights/yolov3_training_plastic.weights"
 font_scale = 1
 thickness = 1
-LABELS = open("classes1.names").read().strip().split("\n")
+LABELS = open(".names/plastic.names").read().strip().split("\n")
 print(LABELS)
 COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
 
@@ -23,7 +23,7 @@ net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 ln = net.getLayerNames()
 ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-image = cv2.imread("test_paper3.jpg")
+image = cv2.imread("assets/plastic1.jpg")
 # cap = cv2.VideoCapture(0)
 h, w = image.shape[:2]
 blob = cv2.dnn.blobFromImage(image, 1/255.0, (416, 416), swapRB=True, crop=False)
@@ -86,18 +86,20 @@ if len(idxs) > 0:
         # calculate text width & height to draw the transparent boxes as background of the text
         (text_width, text_height) = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_scale, thickness=thickness)[0]
         text_offset_x = x
-        text_offset_y = y - 5
+        text_offset_y = y + 24
         box_coords = ((text_offset_x, text_offset_y), (text_offset_x + text_width + 2, text_offset_y - text_height))
         overlay = image.copy()
         cv2.rectangle(overlay, box_coords[0], box_coords[1], color=color, thickness=cv2.FILLED)
         # add opacity (transparency to the box)
         image = cv2.addWeighted(overlay, 0.6, image, 0.4, 0)
         # now put the text (label: confidence %)
-        cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+        cv2.putText(image, text, (x, y + 24), cv2.FONT_HERSHEY_SIMPLEX,
             fontScale=font_scale, color=(0, 0, 0), thickness=thickness)
 
         cv2.imshow("image", image)
         if ord("q") == cv2.waitKey(0):
             break
+else:
+    print("Nothing detected")
 
 # cv2.destroyAllWindows()

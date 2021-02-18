@@ -10,11 +10,11 @@ CONFIDENCE = 0.3
 SCORE_THRESHOLD = 0.5
 IOU_THRESHOLD = 0.5
 # Put here the same .cfg file that the training
-config_path = "cfg/yolov3_garb_test.cfg"
-weights_path = "weights/yolov3_garb_40000.weights"
+config_path = "cfg/yolov4-csp.cfg"
+weights_path = "weights/yolov4-csp.weights"
 font_scale = 1
 thickness = 1
-LABELS = open(".names/garb.names").read().strip().split("\n")
+LABELS = open(".names/coco.names").read().strip().split("\n")
 print(LABELS)
 COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
 
@@ -23,8 +23,8 @@ net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 ln = net.getLayerNames()
 ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-# cap = cv2.VideoCapture("traffic-sign-to-test.mp4")
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("rtsp://admin:Sena14232518@192.168.0.105:554/cam/realmonitor?channel=1&subtype=0")
+# cap = cv2.VideoCapture(0)
 
 while True:
     _, image = cap.read()

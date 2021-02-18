@@ -7,13 +7,13 @@ import random
 import matplotlib.pyplot as plt
 
 # Load Yolo
-net = cv2.dnn.readNetFromDarknet("cfg/yolov3_ts_test.cfg",r"weights/yolov3_training_traffic.weights")
+net = cv2.dnn.readNetFromDarknet("cfg/yolov3_garb_test2.cfg",r"weights/garb.weights")
 
 # Name custom object
-classes = ['prohibitory', 'danger', 'mandatory', 'other']
+classes = open(".names/garb2.names").read().strip().split("\n")
 
 
-cap = cv2.VideoCapture("traffic-sign-to-test.mp4")
+cap = cv2.VideoCapture("assets/plastic-test3.mp4")
 print(cap)
 
 layer_names = net.getLayerNames()
